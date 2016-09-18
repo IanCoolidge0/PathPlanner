@@ -24,6 +24,7 @@ public class PathPlanner {
 	{
 		if(wayPoints.length % 3 == 0)
 			spline = new Spline(wayPoints);
+
 	}
 	
 }
