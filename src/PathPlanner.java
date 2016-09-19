@@ -12,8 +12,10 @@ public class PathPlanner {
 	
 	//waypoints are entered as (x1, y1, t1, x2, y2, t2,...), units are arbitrary.
 	//TODO create a more dynamic system of entering waypoints
-	private static float[] wayPoints = {2,    2,    3,
-			                            3,    1,    5,};
+	private static float[] wayPoints = {0,    0,    0,
+										1,    1,    1,
+										2,    3,    2,
+										0,    4,    3};
 	
 	public static void main(String[] args)
 	{
