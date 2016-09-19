@@ -13,6 +13,11 @@ public class Spline {
 	private float[] dxdtAtWP;
 	private float[] dydtAtWP;
 	
+	private float[] ax;
+	private float[] bx;
+	private float[] ay;
+	private float[] by;
+	
 	public Spline(float[] wayPoints) 
 	{
 		this.wayPoints = wayPoints;
@@ -21,37 +26,69 @@ public class Spline {
 		this.dxdtAtWP = new float[numWP];
 		this.dydtAtWP = new float[numWP];
 		
+		this.ax = new float[numWP];
+		this.bx = new float[numWP];
+		this.ay = new float[numWP];
+		this.by = new float[numWP];
+		
 		create();
 	}
+	
+	private int getIndex(float t)
+	{
+		for(int i=1; i<numWP; i++)
+		{
+			if(wayPoints[3*(i-1)+2] <= t && t < wayPoints[3*i+2])
+			{
+				return i;
+			}
+		}
+		
+		return -1;
+	}
 
-	public void getX()
+	public float getX(float t)
 	{
+		int i = getIndex(t);
+		if(i == -1) return 0;
 		
+		float c = (t - wayPoints[3*(i-1)+2])
+				/ (wayPoints[3*i+2]-wayPoints[3*(i-1)+2]);
+		
+		return (1-c)*wayPoints[3*(i-1)] + c*wayPoints[3*i] 
+			 + c*(1-c)*(ax[i]*(1-c)+bx[i]*c);
 	}
 	
-	public void getY()
+	public float getY(float t)
 	{
+		int i = getIndex(t);
+		if(i == -1) return 0;
 		
+		float c = (t - wayPoints[3*(i-1)+2])
+				/ (wayPoints[3*i+2]-wayPoints[3*(i-1)+2]);
+		
+		return (1-c)*wayPoints[3*(i-1)+1] + c*wayPoints[3*i+1] 
+			 + c*(1-c)*(ay[i]*(1-c)+by[i]*c);
 	}
 	
-	public void getVelX()
+	public float getVelX(float t)
 	{
-		
+		return 0;
 	}
 	
-	public void getVelY()
+	public float getVelY(float t)
 	{
-		
+		return 0;
 	}
 	
-	public void getAccX()
+	public float getAccX(float t)
 	{
-		
+		return 0;
 	}
 	
-	public void getAccY()
+	public float getAccY(float t)
 	{
-		
+		return 0;
 	}
 	
 	private void create()
@@ -124,6 +161,19 @@ public class Spline {
 		
 		dxdtAtWP = LinearSystem.solveLinearSystem(xMatrix, xVector);
 		dydtAtWP = LinearSystem.solveLinearSystem(yMatrix, yVector);
+		
+		for(int i=1; i<numWP; i++)
+		{
+			ax[i] = dxdtAtWP[i-1]*(wayPoints[3*i+2]-wayPoints[3*(i-1)+2])
+				  - (wayPoints[3*i]-wayPoints[3*(i-1)]);
+			ay[i] = dydtAtWP[i-1]*(wayPoints[3*i+2]-wayPoints[3*(i-1)+2])
+					  - (wayPoints[3*i+1]-wayPoints[3*(i-1)+1]);
+			
+			bx[i] = -dxdtAtWP[i]*(wayPoints[3*i+2]-wayPoints[3*(i-1)+1])
+				  + (wayPoints[3*i]-wayPoints[3*(i-1)]);
+			by[i] = -dydtAtWP[i]*(wayPoints[3*i+2]-wayPoints[3*(i-1)+1])
+					  + (wayPoints[3*i+1]-wayPoints[3*(i-1)+1]);
+		}
 	}
 	
 }
