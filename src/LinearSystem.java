@@ -23,6 +23,9 @@ public class LinearSystem {
 		float[] old = new float[A.length];
 		float detA = determinant(A);
 		
+		if(detA == 0)
+			return null;
+		
 		for(int i=0; i<A.length; i++)
 		{
 			for(int j=0; j<A.length; j++) {

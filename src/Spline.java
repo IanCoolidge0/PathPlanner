@@ -57,6 +57,40 @@ public class Spline {
 			xMatrix[i][i+1] = yMatrix[i][i+1] = 1/(yip - yi);
 		}
 		
+		//boundary condition at beginning
+		float x0 = wayPoints[0];
+		float y0 = wayPoints[1];
+		float t0 = wayPoints[2];
+		
+		float x1 = wayPoints[3];
+		float y1 = wayPoints[4];
+		float t1 = wayPoints[5];
+		
+		xMatrix[0][0] = 2 / (t1 - t0);
+		xMatrix[0][1] = 1 / (t1 - t0);
+		xVector[0] = 3 * (x1 - x0) / ( (t1-t0)*(t1-t0) );
+		
+		yMatrix[0][0] = 2 / (t1 - t0);
+		yMatrix[0][1] = 1 / (t1 - t0);
+		yVector[0] = 3 * (y1 - y0) / ( (t1-t0)*(t1-t0) );
+		
+		//boundary condition at end
+		float xn = wayPoints[3*(numWP-1)];
+		float yn = wayPoints[3*(numWP-1) + 1];
+		float tn = wayPoints[3*(numWP-1) + 2];
+		
+		float xnm = wayPoints[3*(numWP-2)];
+		float ynm = wayPoints[3*(numWP-2) + 1];
+		float tnm = wayPoints[3*(numWP-2) + 2];
+		
+		xMatrix[numWP-1][numWP-2]   = 1 / (tn - tnm);
+		xMatrix[numWP-1][numWP-1]   = 2 / (tn - tnm);
+		xVector[numWP-1] = 3 * (xn - xnm) / ( (tn-tnm)*(tn-tnm) );
+		
+		yMatrix[numWP-1][numWP-2]   = 1 / (tn - tnm);
+		yMatrix[numWP-1][numWP-1]   = 2 / (tn - tnm);
+		yVector[numWP-1] = 3 * (yn - ynm) / ( (tn-tnm)*(tn-tnm) );
+		
 		dxdtAtWP = LinearSystem.solveLinearSystem(xMatrix, xVector);
 		dydtAtWP = LinearSystem.solveLinearSystem(yMatrix, yVector);
 	}
