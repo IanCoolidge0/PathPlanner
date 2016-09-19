@@ -73,22 +73,66 @@ public class Spline {
 	
 	public float getVelX(float t)
 	{
-		return 0;
+		int i = getIndex(t);
+		if(i == -1) return 0;
+		
+		float c = (t - wayPoints[3*(i-1)+2])
+				/ (wayPoints[3*i+2]-wayPoints[3*(i-1)+2]);
+		
+		float xi = wayPoints[3*i];
+		float xim = wayPoints[3*(i-1)];
+		float ti = wayPoints[3*i+2];
+		float tim = wayPoints[3*(i-1)+2];
+		
+		return (xi - xim)/(ti - tim) + (1-2*c)*(ax[i]*(1-c)+bx[i]*c)/(ti - tim)
+				+ c*(1-c)*(bx[i]-ax[i])/(ti - tim);
 	}
 	
 	public float getVelY(float t)
 	{
-		return 0;
+		int i = getIndex(t);
+		if(i == -1) return 0;
+		
+		float c = (t - wayPoints[3*(i-1)+2])
+				/ (wayPoints[3*i+2]-wayPoints[3*(i-1)+2]);
+		
+		float yi = wayPoints[3*i+1];
+		float yim = wayPoints[3*(i-1)+1];
+		float ti = wayPoints[3*i+2];
+		float tim = wayPoints[3*(i-1)+2];
+		
+		return (yi - yim)/(ti - tim) + (1-2*c)*(ay[i]*(1-c)+by[i]*c)/(ti - tim)
+				+ c*(1-c)*(by[i]-ay[i])/(ti - tim);
 	}
 	
 	public float getAccX(float t)
 	{
-		return 0;
+		int i = getIndex(t);
+		if(i == -1) return 0;
+		
+		float c = (t - wayPoints[3*(i-1)+2])
+				/ (wayPoints[3*i+2]-wayPoints[3*(i-1)+2]);
+		
+		float ti = wayPoints[3*i+2];
+		float tim = wayPoints[3*(i-1)+2];
+		
+		return 2 * (bx[i] - 2*ax[i] + (ax[i]-bx[i])*3*c)
+				 / ((ti-tim)*(ti-tim));
 	}
 	
 	public float getAccY(float t)
 	{
-		return 0;
+		int i = getIndex(t);
+		if(i == -1) return 0;
+		
+		float c = (t - wayPoints[3*(i-1)+2])
+				/ (wayPoints[3*i+2]-wayPoints[3*(i-1)+2]);
+		
+		float ti = wayPoints[3*i+2];
+		float tim = wayPoints[3*(i-1)+2];
+		
+		return 2 * (by[i] - 2*ay[i] + (ay[i]-by[i])*3*c)
+				 / ((ti-tim)*(ti-tim));
 	}
 	
 	private void create()
