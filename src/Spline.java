@@ -19,10 +19,41 @@ public class Spline {
 		this.numWP = wayPoints.length / 3;
 		
 		this.dxdtAtWP = new float[numWP];
+		this.dydtAtWP = new float[numWP];
 		
 		create();
 	}
-//row then column
+
+	public void getX()
+	{
+		
+	}
+	
+	public void getY()
+	{
+		
+	}
+	
+	public void getVelX()
+	{
+		
+	}
+	
+	public void getVelY()
+	{
+		
+	}
+	
+	public void getAccX()
+	{
+		
+	}
+	
+	public void getAccY()
+	{
+		
+	}
+	
 	private void create()
 	{	
 		float[][] xMatrix = new float[numWP][numWP];
